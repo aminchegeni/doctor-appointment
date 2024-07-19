@@ -1,0 +1,4 @@
+INSERT INTO appointment (day, ref, start, status, name, phone) VALUES (CURRENT_DATE, 'R0000000000000001', CURRENT_TIME + INTERVAL  '0' MINUTE, 'T', 'Amin Chegeni', '09163412114');
+INSERT INTO appointment (day, ref, start, status, name, phone) VALUES (CURRENT_DATE, 'R0000000000000002', CURRENT_TIME + INTERVAL '30' MINUTE, 'T', 'Chegeni Zadeh', '09163411421');
+INSERT INTO appointment (day, ref, start, status, name, phone) VALUES (CURRENT_DATE, 'R0000000000000003', CURRENT_TIME + INTERVAL '60' MINUTE, 'T', 'Amin Chegeni', '09163412114');
+INSERT INTO appointment (day, ref, start, status, name, phone) VALUES (CURRENT_DATE, 'R0000000000000004', CURRENT_TIME + INTERVAL '90' MINUTE, 'T', 'Chegeni Zadeh', '09163411421');

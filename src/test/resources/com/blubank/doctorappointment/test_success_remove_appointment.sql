@@ -1,0 +1,1 @@
+INSERT INTO appointment (day, start) VALUES (CURRENT_DATE, CURRENT_TIME);

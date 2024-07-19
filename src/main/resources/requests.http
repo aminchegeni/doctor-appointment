@@ -1,0 +1,128 @@
+###
+# @name plan-day-appointments
+
+< {%
+    const day = $isoTimestamp.slice(0, 10)
+    client.global.set('day', day)
+    request.variables.set('day', day)
+%}
+
+POST http://{{address}}
+    /v1
+    /appointments
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "day": "{{day}}",
+  "start": "12:00:00",
+  "end": "13:00:00"
+}
+
+> {%
+    if (response.status == 200) {
+        const count = response.body.result
+        console.log(count)
+        client.global.set('planed-appointment-count', `${count}`)
+    }
+%}
+
+###
+# @name get-all-not-canceled-appointments
+
+< {%
+    request.variables.set('state', '!canceled')
+    request.variables.set('day', client.global.get('day'))
+%}
+
+GET http://{{address}}
+    /v1
+    /appointments
+    /{{state}}
+    ?day={{day}}
+Authorization: Basic {{username}} {{password}}
+Accept: */*
+
+###
+# @name get-all-open-appointments
+
+< {%
+    request.variables.set('state', 'open')
+    request.variables.set('day', client.global.get('day'))
+%}
+
+GET http://{{address}}
+    /v1
+    /appointments
+    /{{state}}
+    ?day={{day}}
+Authorization: Basic {{username}} {{password}}
+Accept: */*
+
+> {%
+    if (response.status == 200 && response.body.result.length > 0) {
+        const ref = response.body.result[0].ref
+        console.log(ref)
+        client.global.set("ref", ref)
+    }
+ %}
+
+###
+# @name delete-appointment
+
+< {%
+    request.variables.set('ref', client.global.get('ref'))
+%}
+
+DELETE http://{{address}}
+    /v1
+    /appointments
+    ?ref={{ref}}
+Authorization: Basic {{username}} {{password}}
+Accept: */*
+
+###
+# @name book-appointment
+
+< {%
+    const name = $random.alphabetic(25)
+    const phone = `0${$random.integer(1000000000, 2147483647)}`
+    request.variables.set('day', client.global.get('day'))
+    request.variables.set('ref', client.global.get('ref'))
+    request.variables.set('name', name)
+    request.variables.set('phone', phone)
+%}
+
+PATCH http://{{address}}
+    /v1
+    /appointments
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "day": "{{day}}",
+  "ref": "{{ref}}",
+  "name": "{{name}}",
+  "phone": "{{phone}}"
+}
+
+> {%
+    if (response.status == 200) {
+        console.log(response.body.result.phone)
+        client.global.set("phone", response.body.result.phone)
+    }
+%}
+
+###
+# @name get-taken-appointments
+
+< {%
+    request.variables.set('phone', client.global.get('phone'))
+%}
+
+GET http://{{address}}
+    /v1
+    /appointments
+    /{{phone}}
+Authorization: Basic {{username}} {{password}}
+Accept: */*

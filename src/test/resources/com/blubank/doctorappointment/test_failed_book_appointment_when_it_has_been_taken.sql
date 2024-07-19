@@ -1,0 +1,1 @@
+INSERT INTO appointment (day, start, status, name, phone) VALUES (CURRENT_DATE, CURRENT_TIME, 'T', 'Amin Chegeni Zadeh', '09163412114');
